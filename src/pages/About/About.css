@@ -1,0 +1,172 @@
+.about-section {
+    margin: 70px 0;
+    padding: 120px 0;
+
+    background: #0b1812;
+
+    direction: rtl;
+
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 40px;
+}
+
+
+.about-section::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    background: #f4c542;
+
+    filter: blur(160px);
+
+    opacity: 0.08;
+
+    top: -150px;
+    left: -150px;
+}
+
+
+.about-image {
+    position: relative;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 20px;
+
+    position: relative;
+    z-index: 2;
+
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+
+.about-glow {
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    background: #f4c542;
+
+    filter: blur(120px);
+
+    opacity: 0.25;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 1;
+}
+
+
+.about-tag {
+    display: inline-block;
+
+    background: rgba(255,255,255,0.08);
+
+    color: #f4c542;
+
+    padding: 8px 18px;
+
+    border-radius: 50px;
+
+    margin-bottom: 20px;
+
+    backdrop-filter: blur(10px);
+}
+
+.about-title {
+    font-size: 3rem;
+    font-weight: 800;
+
+    margin-bottom: 20px;
+
+    line-height: 1.2;
+}
+
+.about-desc {
+    color: #cfcfcf;
+
+    line-height: 1.8;
+
+    margin-bottom: 30px;
+
+    max-width: 500px;
+}
+
+
+.about-stats {
+    display: flex;
+
+    gap: 30px;
+
+    flex-wrap: wrap;
+}
+
+.about-stats div {
+    text-align: center;
+}
+
+.about-stats h3 {
+    color: #f4c542;
+
+    font-size: 2rem;
+
+    margin-bottom: 5px;
+}
+
+.about-stats p {
+    color: #aaa;
+
+    font-size: 0.9rem;
+}
+
+
+.about-carousel {
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.about-carousel img {
+    height: 450px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+@media (max-width: 992px) {
+
+    .about-section {
+        padding: 80px 20px;
+    }
+
+    .about-title {
+        font-size: 2.2rem;
+        text-align: center;
+    }
+
+    .about-desc {
+        text-align: center;
+
+        margin: 0 auto 30px;
+    }
+
+    .about-stats {
+        justify-content: center;
+    }
+
+    .about-image {
+        text-align: center;
+    }
+
+    .about-carousel img {
+        height: 320px;
+    }
+}

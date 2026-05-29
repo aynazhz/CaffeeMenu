@@ -1,0 +1,64 @@
+body {
+  direction: rtl;
+  text-align: right;
+  background-color: #f8f5f2;
+}
+
+/* Navbar پایه */
+.cafe-navbar {
+  background: linear-gradient(135deg, #3b2f2f, #5a3e36);
+  transition: all 0.4s ease;
+  padding: 15px 0;
+}
+
+/* تغییر رنگ هنگام اسکرول */
+.cafe-navbar.scrolled {
+  background: rgba(30, 20, 20, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 0;
+}
+
+/* برند */
+.brand-anim {
+  transition: 0.3s;
+}
+
+.brand-anim:hover {
+  transform: scale(1.1);
+  color: #ffd28f !important;
+}
+
+/* لینک‌ها */
+.nav-anim {
+  position: relative;
+  color: #f5e6d3 !important;
+  transition: 0.3s;
+  font-weight: 500;
+}
+
+/* انیمیشن خط زیر لینک */
+.nav-anim::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  right: 0;
+  width: 0%;
+  height: 2px;
+  background: #ffd28f;
+  transition: 0.3s;
+}
+
+/* hover */
+.nav-anim:hover {
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.nav-anim:hover::after {
+  width: 100%;
+}
+
+/* active route */
+.navbar .active {
+  color: #ffd28f !important;
+}

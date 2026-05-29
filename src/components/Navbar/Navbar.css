@@ -1,0 +1,113 @@
+.cafe-navbar {
+    background: rgba(18, 53, 36, 0.85);
+    backdrop-filter: blur(12px);
+
+    transition: all 0.4s ease;
+    padding: 18px 0;
+}
+
+.cafe-navbar.scrolled {
+    background: rgba(10, 25, 18, 0.95);
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+
+    padding: 12px 0;
+}
+
+/* لوگو */
+
+.brand-logo {
+    font-size: 1.8rem;
+    color: #fff !important;
+
+    transition: 0.3s;
+}
+
+.brand-logo:hover {
+    color: #f4c542 !important;
+
+    transform: scale(1.05);
+}
+
+
+
+.nav-link-custom {
+    color: #eaeaea !important;
+
+    font-weight: 500;
+
+    position: relative;
+
+    transition: 0.3s;
+}
+
+.nav-link-custom::after {
+    content: "";
+
+    position: absolute;
+
+    width: 0;
+    height: 2px;
+
+    left: 0;
+    bottom: 0;
+
+    background: #f4c542;
+
+    transition: 0.3s;
+}
+
+.nav-link-custom:hover::after {
+    width: 100%;
+}
+
+.nav-link-custom:hover {
+    color: #f4c542 !important;
+}
+
+
+.active-link {
+    color: #f4c542 !important;
+
+    font-weight: bold;
+}
+
+
+.order-btn {
+    background: #f4c542 !important;
+
+    border: none !important;
+
+    color: #123524 !important;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+.order-btn:hover {
+    transform: translateY(-3px);
+
+    background: #ffd95e !important;
+}
+
+
+
+@media (max-width: 991px) {
+
+    .order-btn {
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .navbar-nav {
+        margin-top: 20px;
+    }
+
+    
+}
+.active-link {
+  color: #f4c542 !important;
+  font-weight: 700;
+  position: relative;
+}
