@@ -1,4 +1,8 @@
-```
+# Ignore build outputs
+bin/
+obj/
+.vs/
+
 # dependencies
 node_modules
 .pnp
