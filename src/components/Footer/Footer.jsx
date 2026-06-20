@@ -11,8 +11,8 @@ export default function Footer() {
               <span>C</span>
               <div>خانه قهوه<small>COFFEE HOUSE</small></div>
             </Link>
-            <p>یک فنجان خوب، دقیقاً همان‌طور که دوستش داری.</p>
-            <div className="footer-status"><i aria-hidden="true" /> امروز تا ساعت ۲۳ بازیم</div>
+            <p>یک فنجان خوب، دقیقاً همان‌طور که دوست داری.</p>
+            <div className="footer-status"><i aria-hidden="true" /> هر روز از ساعت 8:00 الی 23:00</div>
           </div>
 
           <nav className="footer-nav" aria-label="دسترسی سریع">

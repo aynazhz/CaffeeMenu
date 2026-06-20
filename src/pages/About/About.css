@@ -1,8 +1,10 @@
 .about-section {
-    margin: 70px 0;
+    margin: 22px 18px 70px;
     padding: 120px 0;
 
-    background: #0b1812;
+    background:
+        radial-gradient(circle at 78% 44%, rgba(220, 174, 84, 0.14), transparent 28%),
+        linear-gradient(145deg, #17372a 0%, #0d2118 54%, #091710 100%);
 
     direction: rtl;
 
@@ -21,7 +23,7 @@
     width: 500px;
     height: 500px;
 
-    background: #f4c542;
+    background: #dcae54;
 
     filter: blur(160px);
 
@@ -29,6 +31,27 @@
 
     top: -150px;
     left: -150px;
+}
+
+.about-section::after {
+    content: "ABOUT";
+    position: absolute;
+    top: 45px;
+    right: 4%;
+    color: transparent;
+    font-family: Arial, sans-serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.about-section .container {
+    position: relative;
+    z-index: 1;
 }
 
 
@@ -52,7 +75,7 @@
     width: 300px;
     height: 300px;
 
-    background: #f4c542;
+    background: #dcae54;
 
     filter: blur(120px);
 
@@ -72,7 +95,7 @@
 
     background: rgba(255,255,255,0.08);
 
-    color: #f4c542;
+    color: #dcae54;
 
     padding: 8px 18px;
 
@@ -116,7 +139,7 @@
 }
 
 .about-stats h3 {
-    color: #f4c542;
+    color: #dcae54;
 
     font-size: 2rem;
 
@@ -143,7 +166,15 @@
 
 @media (max-width: 992px) {
 
+    .about-section::after {
+        top: 30px;
+        right: 50%;
+        transform: translateX(50%);
+        font-size: clamp(3.5rem, 18vw, 7rem);
+    }
+
     .about-section {
+        margin: 14px 12px 50px;
         padding: 80px 20px;
     }
 
@@ -173,4 +204,21 @@
 .footer-separator {
     height: 50px;
     background: white;
+}
+
+@media (max-width: 767px) {
+    .about-section {
+        padding-top: 135px;
+    }
+
+    .about-section::after {
+        display: block;
+        top: 38px;
+        right: 50%;
+        width: 100%;
+        text-align: center;
+        font-size: clamp(3.4rem, 18vw, 6rem);
+        letter-spacing: 0.04em;
+        transform: translateX(50%);
+    }
 }

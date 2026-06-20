@@ -22,7 +22,7 @@ export default function About() {
                 
                     <div className="col-lg-6 text-white about-text">
 
-                        <span className="about-tag">درباره ما</span>
+                       
 
                         <h2 className="about-title">
                             کافه‌ای برای
