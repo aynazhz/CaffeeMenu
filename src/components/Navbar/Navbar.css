@@ -1,113 +1,67 @@
 .cafe-navbar {
-    background: rgba(18, 53, 36, 0.85);
-    backdrop-filter: blur(12px);
-
-    transition: all 0.4s ease;
-    padding: 18px 0;
+  position: relative;
+  z-index: 100;
+  padding: 14px 0;
+  color: #fff;
+  background: #10281e;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  transition: padding .3s ease, background-color .3s ease, box-shadow .3s ease;
 }
 
 .cafe-navbar.scrolled {
-    background: rgba(10, 25, 18, 0.95);
-
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-
-    padding: 12px 0;
+  position: sticky;
+  top: 0;
+  padding: 10px 0;
+  background: rgba(10,27,19,.92);
+  box-shadow: 0 12px 35px rgba(0,0,0,.15);
+  backdrop-filter: blur(18px);
 }
 
-/* لوگو */
+.brand-logo { display: inline-flex; align-items: center; gap: 10px; padding: 0 !important; color: #fff !important; }
+.brand-mark { display: grid; place-items: center; width: 38px; height: 38px; color: #173126; background: #d6a64d; border-radius: 12px; font: 800 1.05rem/1 Georgia, serif; transform: rotate(-5deg); }
+.brand-name { display: grid; gap: 2px; font-size: .9rem; font-weight: 800; line-height: 1.1; }
+.brand-name small { color: #8d9b94; font: 600 .46rem/1.1 Arial, sans-serif; letter-spacing: .16em; }
 
-.brand-logo {
-    font-size: 1.8rem;
-    color: #fff !important;
-
-    transition: 0.3s;
-}
-
-.brand-logo:hover {
-    color: #f4c542 !important;
-
-    transform: scale(1.05);
-}
-
-
-
-.nav-link-custom {
-    color: #eaeaea !important;
-
-    font-weight: 500;
-
-    position: relative;
-
-    transition: 0.3s;
-}
-
-.nav-link-custom::after {
-    content: "";
-
-    position: absolute;
-
-    width: 0;
-    height: 2px;
-
-    left: 0;
-    bottom: 0;
-
-    background: #f4c542;
-
-    transition: 0.3s;
-}
-
-.nav-link-custom:hover::after {
-    width: 100%;
-}
-
-.nav-link-custom:hover {
-    color: #f4c542 !important;
-}
-
-
-.active-link {
-    color: #f4c542 !important;
-
-    font-weight: bold;
-}
-
-
-.order-btn {
-    background: #f4c542 !important;
-
-    border: none !important;
-
-    color: #123524 !important;
-
-    font-weight: bold;
-
-    transition: 0.3s;
-}
-
-.order-btn:hover {
-    transform: translateY(-3px);
-
-    background: #ffd95e !important;
-}
-
-
-
-@media (max-width: 991px) {
-
-    .order-btn {
-        margin-top: 20px;
-        width: 100%;
-    }
-
-    .navbar-nav {
-        margin-top: 20px;
-    }
-
-    
-}
-.active-link {
-  color: #f4c542 !important;
-  font-weight: 700;
+.nav-link-custom, .active-link {
   position: relative;
+  padding-inline: 4px !important;
+  color: #abb7b0 !important;
+  font-size: .82rem !important;
+  font-weight: 600 !important;
+  transition: color .25s ease;
+}
+.nav-link-custom:hover, .active-link { color: #f3ebdc !important; }
+.active-link::after { content: ""; position: absolute; right: 50%; bottom: -5px; width: 4px; height: 4px; background: #d6a64d; border-radius: 50%; transform: translateX(50%); }
+
+.navbar-toggler { display: none; width: 42px; height: 42px; padding: 0 !important; border: 1px solid rgba(255,255,255,.12) !important; border-radius: 12px !important; box-shadow: none !important; }
+.navbar-toggler span { display: block; width: 17px; height: 1px; margin: 5px auto; background: #f2eadc; transition: transform .25s ease; }
+
+@media (max-width: 991.98px) {
+  .cafe-navbar { padding: 11px 0; }
+  .cafe-navbar > .container { position: relative; }
+  .navbar-toggler { display: block; order: 3; }
+  .brand-logo { order: 1; }
+  .navbar-toggler { margin-right: auto; }
+  .navbar-collapse {
+    position: absolute;
+    top: calc(100% + 11px);
+    right: calc(var(--bs-gutter-x) * .5);
+    left: calc(var(--bs-gutter-x) * .5);
+    order: 4;
+    padding: 13px;
+    background: rgba(17,42,31,.98);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 18px;
+    box-shadow: 0 22px 50px rgba(0,0,0,.28);
+    backdrop-filter: blur(20px);
+  }
+  .navbar-nav { gap: 3px; margin: 0 !important; text-align: right !important; }
+  .nav-link-custom, .active-link { padding: 12px 14px !important; border-radius: 11px; }
+  .nav-link-custom:hover, .active-link { background: rgba(255,255,255,.06); }
+  .active-link::after { right: auto; left: 14px; bottom: 50%; transform: translateY(50%); }
+}
+
+@media (max-width: 430px) {
+  .brand-name { display: none; }
+  .brand-mark { width: 40px; height: 40px; }
 }

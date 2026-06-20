@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -29,9 +28,9 @@ export default function Navbar() {
     >
       <div className="container">
 
-        {/* Logo */}
         <NavLink className="navbar-brand brand-logo" to="/">
-          ☕ Coffee House
+          <span className="brand-mark" aria-hidden="true">C</span>
+          <span className="brand-name">خانه قهوه<small>COFFEE HOUSE</small></span>
         </NavLink>
 
         {/* Toggle */}
@@ -40,8 +39,11 @@ export default function Navbar() {
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#mainNavbar"
+          aria-controls="mainNavbar"
+          aria-expanded="false"
+          aria-label="باز کردن منو"
         >
-          <span className="navbar-toggler-icon"></span>
+          <span></span><span></span>
         </button>
 
         {/* Links */}
@@ -72,11 +74,6 @@ export default function Navbar() {
 
           </ul>
         </div>
-
-        {/* Button */}
-        <Button className="order-btn rounded-pill px-4">
-          سفارش
-        </Button>
 
       </div>
     </nav>

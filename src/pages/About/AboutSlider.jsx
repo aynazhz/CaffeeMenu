@@ -5,7 +5,7 @@ import cafe5 from "../../assets/cafe5.PNG";
 
 export default function AboutSlider() {
   return (
-    <Carousel fade interval={3000} className="about-carousel">
+    <Carousel fade interval={2000} className="about-carousel">
 
       <Carousel.Item>
         <img

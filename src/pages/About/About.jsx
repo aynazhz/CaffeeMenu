@@ -1,4 +1,3 @@
-import Footer from "../../components/Footer/Footer";
 import "./About.css";
 import AboutSlider from "./AboutSlider";
 import Intrior from "../../assets/intrior.PNG";
@@ -7,6 +6,7 @@ export default function About() {
     return (
         <section className="about-section" id="about">
             <div className="container">
+                
                 <div className="row align-items-center gy-5">
 
                 
@@ -54,13 +54,18 @@ export default function About() {
                             <AboutSlider/>
                             
                         </div>
-
+                    
                     </div>
                     
-
+                   
                 </div>
             
             </div>
+            
+          
         </section>
+        
+
+        
     );
 }

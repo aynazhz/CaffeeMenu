@@ -170,3 +170,7 @@
         height: 320px;
     }
 }
+.footer-separator {
+    height: 50px;
+    background: white;
+}
