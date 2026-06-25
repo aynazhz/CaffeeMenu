@@ -83,6 +83,50 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id:int}/image")]
+    [Consumes("multipart/form-data")]
+    [RequestSizeLimit(5_000_000)]
+    public async Task<ActionResult<MenuItem>> UpdateImage(
+        int id,
+        IFormFile image,
+        [FromServices] IWebHostEnvironment environment)
+    {
+        if (image.Length == 0)
+        {
+            return BadRequest("Image file is required.");
+        }
+
+        if (!image.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest("Only image files are allowed.");
+        }
+
+        var item = await dbContext.MenuItems.FindAsync(id);
+
+        if (item is null)
+        {
+            return NotFound();
+        }
+
+        var webRoot = environment.WebRootPath ?? Path.Combine(environment.ContentRootPath, "wwwroot");
+        var uploadFolder = Path.Combine(webRoot, "uploads");
+        Directory.CreateDirectory(uploadFolder);
+
+        var extension = Path.GetExtension(image.FileName);
+        var fileName = $"menu-{id}-{Guid.NewGuid():N}{extension}";
+        var filePath = Path.Combine(uploadFolder, fileName);
+
+        await using (var stream = System.IO.File.Create(filePath))
+        {
+            await image.CopyToAsync(stream);
+        }
+
+        item.Image = $"/uploads/{fileName}";
+        await dbContext.SaveChangesAsync();
+
+        return Ok(item);
+    }
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

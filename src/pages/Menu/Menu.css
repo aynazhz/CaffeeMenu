@@ -29,6 +29,7 @@
 }
 .menu-filters button:hover, .menu-filters button.is-active { color: #fff; background: var(--ink); border-color: var(--ink); transform: translateY(-2px); }
 .menu-count { color: #848b86; font-size: .75rem; }
+.menu-error { margin: -10px 0 22px; color: #a43d2f; font-size: .82rem; }
 
 .menu-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; }
 .menu-card {

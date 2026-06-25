@@ -1,7 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-import { menuData } from "../../data/menudata";
+import axios from "axios";
 import "./Menu.css";
+
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5236";
+
+function getImageUrl(image) {
+  if (!image) {
+    return "";
+  }
+
+  return image.startsWith("/") ? `${API_URL}${image}` : image;
+}
 
 const filters = [
   { id: "all", label: "همه", icon: "✦" },
@@ -11,16 +21,53 @@ const filters = [
 ];
 
 export default function Menu() {
+  const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState("all");
-  const filtered = filter === "all"
-    ? menuData
-    : menuData.filter((item) => item.category === filter);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/menu`);
+
+        setProducts(Array.isArray(response.data) ? response.data : []);
+        setError("");
+      } catch (error) {
+        console.error("خطا در دریافت محصولات:", error);
+        setError("منو از سرور دریافت نشد. لطفا API را اجرا کنید و دوباره تلاش کنید.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProducts();
+  }, []);
+
+  const filtered =
+    filter === "all"
+      ? products
+      : products.filter((item) => item.category === filter);
+
+  if (loading) {
+    return (
+      <main className="menu-page">
+        <Container>
+          <p>در حال دریافت منو...</p>
+        </Container>
+      </main>
+    );
+  }
 
   return (
     <main className="menu-page">
       <Container>
         <div className="menu-toolbar">
-          <div className="menu-filters" role="group" aria-label="فیلتر دسته‌بندی منو">
+          <div
+            className="menu-filters"
+            role="group"
+            aria-label="فیلتر دسته‌بندی منو"
+          >
             {filters.map((item) => (
               <button
                 key={item.id}
@@ -34,16 +81,33 @@ export default function Menu() {
               </button>
             ))}
           </div>
-          <span className="menu-count">{filtered.length} انتخاب خوش‌طعم</span>
+
+          <span className="menu-count">
+            {filtered.length} انتخاب خوش‌طعم
+          </span>
         </div>
+
+        {error && <p className="menu-error">{error}</p>}
 
         <section className="menu-grid" aria-live="polite">
           {filtered.map((item, index) => (
-            <article className="menu-card" key={item.id} style={{ "--delay": `${index * 70}ms` }}>
+            <article
+              className="menu-card"
+              key={item.id}
+              style={{ "--delay": `${index * 70}ms` }}
+            >
               <div className="menu-card-media">
-                <img src={`${item.image}?auto=format&fit=crop&w=900&q=85`} alt={item.title} loading="lazy" />
-                <span className="menu-card-index">۰{index + 1}</span>
-                <button className="menu-favorite" type="button" aria-label={`افزودن ${item.title} به علاقه‌مندی‌ها`}>
+                <img src={getImageUrl(item.image)} alt={item.title} loading="lazy" />
+
+                <span className="menu-card-index">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <button
+                  className="menu-favorite"
+                  type="button"
+                  aria-label={`افزودن ${item.title} به علاقه‌مندی‌ها`}
+                >
                   ♡
                 </button>
               </div>
@@ -51,14 +115,26 @@ export default function Menu() {
               <div className="menu-card-body">
                 <div className="menu-card-title">
                   <div>
-                    <span>{item.category === "dessert" ? "شیرین و تازه" : item.category === "drink" ? "خنک و تازه" : "دانه عربیکا"}</span>
+                    <span>
+                      {item.category === "dessert"
+                        ? "شیرین و تازه"
+                        : item.category === "drink"
+                          ? "خنک و تازه"
+                          : "دانه عربیکا"}
+                    </span>
+
                     <h2>{item.title}</h2>
                   </div>
-                  <strong>{item.price}<small> تومان</small></strong>
+
+                  <strong>
+                    {item.price}
+                    <small> تومان</small>
+                  </strong>
                 </div>
 
-                <p>تهیه‌شده با مواد تازه و قابل شخصی‌سازی دقیق برای سلیقه شما.</p>
-
+                <p>
+                  تهیه‌شده با مواد تازه و قابل شخصی‌سازی دقیق برای سلیقه شما.
+                </p>
               </div>
             </article>
           ))}

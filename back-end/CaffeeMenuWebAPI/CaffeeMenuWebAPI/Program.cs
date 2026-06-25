@@ -1,4 +1,3 @@
-
 using CaffeeMenuWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,21 +12,25 @@ namespace CaffeeMenuWebAPI
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
 
-            // Add services to the container.
-
             var connectionString = builder.Configuration.GetConnectionString("CafeMenuDatabase")
                 ?? throw new InvalidOperationException("Connection string 'CafeMenuDatabase' was not found.");
 
             builder.Services.AddDbContext<CafeMenuDbContext>(options =>
                 options.UseSqlServer(connectionString, sqlServerOptions =>
                     sqlServerOptions.EnableRetryOnFailure()));
+
             builder.Services.AddControllers();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("Frontend", policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:5173", "https://localhost:5173")
+                        .WithOrigins(
+                            "http://localhost:5173",
+                            "https://localhost:5173",
+                            "http://127.0.0.1:5173",
+                            "http://localhost:5174",
+                            "http://127.0.0.1:5174")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -46,7 +49,7 @@ namespace CaffeeMenuWebAPI
             DatabaseSeeder.SeedAsync(app.Services).GetAwaiter().GetResult();
 
             app.UseCors("Frontend");
-
+            app.UseStaticFiles();
             app.UseAuthorization();
 
             app.MapControllers();
