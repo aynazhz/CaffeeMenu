@@ -1,6 +1,23 @@
 @CaffeeMenuWebAPI_HostAddress = http://localhost:5236
 
-GET {{CaffeeMenuWebAPI_HostAddress}}/weatherforecast/
+GET {{CaffeeMenuWebAPI_HostAddress}}/api/menu
 Accept: application/json
+
+###
+
+GET {{CaffeeMenuWebAPI_HostAddress}}/api/menu?category=coffee
+Accept: application/json
+
+###
+
+POST {{CaffeeMenuWebAPI_HostAddress}}/api/menu
+Content-Type: application/json
+
+{
+  "title": "آمریکانو",
+  "price": "95,000",
+  "category": "coffee",
+  "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
+}
 
 ###

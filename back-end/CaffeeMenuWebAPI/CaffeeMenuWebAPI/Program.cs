@@ -1,4 +1,7 @@
 
+using CaffeeMenuWebAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace CaffeeMenuWebAPI
 {
     public class Program
@@ -7,26 +10,44 @@ namespace CaffeeMenuWebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+
             // Add services to the container.
 
+            var connectionString = builder.Configuration.GetConnectionString("CafeMenuDatabase")
+                ?? throw new InvalidOperationException("Connection string 'CafeMenuDatabase' was not found.");
+
+            builder.Services.AddDbContext<CafeMenuDbContext>(options =>
+                options.UseSqlServer(connectionString, sqlServerOptions =>
+                    sqlServerOptions.EnableRetryOnFailure()));
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("Frontend", policy =>
+                {
+                    policy
+                        .WithOrigins("http://localhost:5173", "https://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            DatabaseSeeder.SeedAsync(app.Services).GetAwaiter().GetResult();
+
+            app.UseCors("Frontend");
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
