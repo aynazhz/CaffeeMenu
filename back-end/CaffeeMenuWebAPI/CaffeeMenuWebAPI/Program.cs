@@ -1,5 +1,8 @@
 using CaffeeMenuWebAPI.Data;
+using CaffeeMenuWebAPI.Filters;
+using CaffeeMenuWebAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace CaffeeMenuWebAPI
 {
@@ -18,6 +21,8 @@ namespace CaffeeMenuWebAPI
             builder.Services.AddDbContext<CafeMenuDbContext>(options =>
                 options.UseSqlServer(connectionString, sqlServerOptions =>
                     sqlServerOptions.EnableRetryOnFailure()));
+            builder.Services.AddScoped<AdminAuthService>();
+            builder.Services.AddScoped<AdminAuthorizeFilter>();
 
             builder.Services.AddControllers();
             builder.Services.AddCors(options =>
@@ -48,8 +53,16 @@ namespace CaffeeMenuWebAPI
 
             DatabaseSeeder.SeedAsync(app.Services).GetAwaiter().GetResult();
 
+            var uploadRoot = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "uploads");
+            Directory.CreateDirectory(uploadRoot);
+
             app.UseCors("Frontend");
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(uploadRoot),
+                RequestPath = "/uploads"
+            });
             app.UseAuthorization();
 
             app.MapControllers();

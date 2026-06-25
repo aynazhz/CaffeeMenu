@@ -1,4 +1,5 @@
 using CaffeeMenuWebAPI.Data;
+using CaffeeMenuWebAPI.Filters;
 using CaffeeMenuWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace CaffeeMenuWebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
+public sealed class MenuController(CafeMenuDbContext dbContext, IWebHostEnvironment environment) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MenuItem>>> Get([FromQuery] string? category = null)
@@ -47,6 +48,7 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(AdminAuthorizeFilter))]
     public async Task<ActionResult<MenuItem>> Create(CreateMenuItemRequest request)
     {
         var item = new MenuItem
@@ -64,6 +66,7 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ServiceFilter(typeof(AdminAuthorizeFilter))]
     public async Task<IActionResult> Update(int id, UpdateMenuItemRequest request)
     {
         var item = await dbContext.MenuItems.FindAsync(id);
@@ -84,12 +87,10 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
     }
 
     [HttpPut("{id:int}/image")]
+    [ServiceFilter(typeof(AdminAuthorizeFilter))]
     [Consumes("multipart/form-data")]
     [RequestSizeLimit(5_000_000)]
-    public async Task<ActionResult<MenuItem>> UpdateImage(
-        int id,
-        IFormFile image,
-        [FromServices] IWebHostEnvironment environment)
+    public async Task<ActionResult<MenuItem>> UpdateImage(int id, IFormFile image)
     {
         if (image.Length == 0)
         {
@@ -108,8 +109,7 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
             return NotFound();
         }
 
-        var webRoot = environment.WebRootPath ?? Path.Combine(environment.ContentRootPath, "wwwroot");
-        var uploadFolder = Path.Combine(webRoot, "uploads");
+        var uploadFolder = GetUploadFolder();
         Directory.CreateDirectory(uploadFolder);
 
         var extension = Path.GetExtension(image.FileName);
@@ -121,6 +121,8 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
             await image.CopyToAsync(stream);
         }
 
+        DeleteLocalImage(item.Image);
+
         item.Image = $"/uploads/{fileName}";
         await dbContext.SaveChangesAsync();
 
@@ -128,6 +130,7 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ServiceFilter(typeof(AdminAuthorizeFilter))]
     public async Task<IActionResult> Delete(int id)
     {
         var item = await dbContext.MenuItems.FindAsync(id);
@@ -139,7 +142,29 @@ public sealed class MenuController(CafeMenuDbContext dbContext) : ControllerBase
 
         dbContext.MenuItems.Remove(item);
         await dbContext.SaveChangesAsync();
+        DeleteLocalImage(item.Image);
 
         return NoContent();
+    }
+
+    private string GetUploadFolder()
+    {
+        return Path.Combine(environment.ContentRootPath, "wwwroot", "uploads");
+    }
+
+    private void DeleteLocalImage(string? image)
+    {
+        if (string.IsNullOrWhiteSpace(image) || !image.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var fileName = Path.GetFileName(image);
+        var filePath = Path.Combine(GetUploadFolder(), fileName);
+
+        if (System.IO.File.Exists(filePath))
+        {
+            System.IO.File.Delete(filePath);
+        }
     }
 }
