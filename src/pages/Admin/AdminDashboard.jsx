@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { Container } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { isAdminLoggedIn, logoutAdmin } from "./adminAuth";
+import {
+  getAdminAuthHeader,
+  isAdminAuthError,
+  isAdminLoggedIn,
+  logoutAdmin,
+} from "./adminAuth";
 import "./Admin.css";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5236";
@@ -34,7 +39,9 @@ async function uploadImage(itemId, file) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const response = await axios.put(`${API_URL}/api/menu/${itemId}/image`, formData);
+  const response = await axios.put(`${API_URL}/api/menu/${itemId}/image`, formData, {
+    headers: getAdminAuthHeader(),
+  });
   return response.data;
 }
 
@@ -58,6 +65,11 @@ export default function AdminDashboard() {
       })),
     [items]
   );
+
+  const handleAuthExpired = () => {
+    logoutAdmin();
+    navigate("/admin/login", { replace: true });
+  };
 
   useEffect(() => {
     const loadItems = async () => {
@@ -175,7 +187,9 @@ export default function AdminDashboard() {
 
     try {
       if (isEditing) {
-        await axios.put(`${API_URL}/api/menu/${editingId}`, payload);
+        await axios.put(`${API_URL}/api/menu/${editingId}`, payload, {
+          headers: getAdminAuthHeader(),
+        });
 
         let updatedItem = { id: editingId, ...payload };
         if (form.imageFile) {
@@ -187,7 +201,9 @@ export default function AdminDashboard() {
         );
         setMessage("تغییرات آیتم ذخیره شد.");
       } else {
-        const createResponse = await axios.post(`${API_URL}/api/menu`, payload);
+        const createResponse = await axios.post(`${API_URL}/api/menu`, payload, {
+          headers: getAdminAuthHeader(),
+        });
         const createdItem = await uploadImage(createResponse.data.id, form.imageFile);
 
         setItems((currentItems) => [...currentItems, createdItem]);
@@ -197,6 +213,10 @@ export default function AdminDashboard() {
       resetForm(false);
     } catch (error) {
       console.error("Failed to save menu item:", error);
+      if (isAdminAuthError(error)) {
+        handleAuthExpired();
+        return;
+      }
       setMessage(isEditing ? "ویرایش آیتم انجام نشد." : "ساخت آیتم انجام نشد.");
     } finally {
       setSaving(false);
@@ -214,7 +234,9 @@ export default function AdminDashboard() {
     setMessage("");
 
     try {
-      await axios.delete(`${API_URL}/api/menu/${item.id}`);
+      await axios.delete(`${API_URL}/api/menu/${item.id}`, {
+        headers: getAdminAuthHeader(),
+      });
       setItems((currentItems) =>
         currentItems.filter((currentItem) => currentItem.id !== item.id)
       );
@@ -226,6 +248,10 @@ export default function AdminDashboard() {
       setMessage("آیتم با موفقیت حذف شد.");
     } catch (error) {
       console.error("Failed to delete menu item:", error);
+      if (isAdminAuthError(error)) {
+        handleAuthExpired();
+        return;
+      }
       setMessage("حذف آیتم انجام نشد. API را چک کن.");
     } finally {
       setDeletingId(null);

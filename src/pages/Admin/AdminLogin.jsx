@@ -10,20 +10,26 @@ export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   if (isAdminLoggedIn()) {
     return <Navigate to="/admin" replace />;
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmitting(true);
+    setError("");
 
-    if (!loginAdmin(username, password)) {
+    try {
+      await loginAdmin(username, password);
+      navigate(location.state?.from?.pathname ?? "/admin", { replace: true });
+    } catch (error) {
+      console.error("Failed to login admin:", error);
       setError("نام کاربری یا رمز عبور درست نیست.");
-      return;
+    } finally {
+      setSubmitting(false);
     }
-
-    navigate(location.state?.from?.pathname ?? "/admin", { replace: true });
   };
 
   return (
@@ -54,7 +60,9 @@ export default function AdminLogin() {
 
           {error && <p className="admin-form-error">{error}</p>}
 
-          <button type="submit">ورود</button>
+          <button type="submit" disabled={submitting}>
+            {submitting ? "در حال ورود..." : "ورود"}
+          </button>
         </form>
       </Container>
     </main>
